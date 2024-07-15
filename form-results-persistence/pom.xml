@@ -24,6 +24,10 @@
         </dependency>
         <dependency>
             <groupId>com.biit</groupId>
+            <artifactId>form-structure</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.biit</groupId>
             <artifactId>rest-server-security</artifactId>
         </dependency>
         <dependency>

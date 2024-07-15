@@ -8,6 +8,6 @@ import org.testng.annotations.Test;
 @SpringBootTest
 @Test(groups = {"myEntityTest"})
 @Listeners(TestListener.class)
-public class MyEntityTest extends AbstractTestNGSpringContextTests {
+public class ReceivedFormTest extends AbstractTestNGSpringContextTests {
 
 }

@@ -11,7 +11,7 @@
             </run>
         </groups>
         <classes>
-            <class name="com.biit.forms.core.MyEntityTest"/>
+            <class name="com.biit.forms.core.ReceivedFormTest"/>
         </classes>
     </test>
 </suite>
