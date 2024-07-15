@@ -45,9 +45,6 @@ public class ServerEmailService {
     @Value("${mail.to.address:#{null}}")
     private String mailTo;
 
-    @Value("${mail.access.account.enabled:false}")
-    private boolean mailAccessAccountEnabled;
-
     private final MessageSource messageSource;
 
     private final Locale locale = Locale.ENGLISH;
@@ -60,7 +57,7 @@ public class ServerEmailService {
     public void sendPdfForm(String submittedBy, String formName, byte[] pdfForm) throws EmailNotSentException, InvalidEmailAddressException,
             FileNotFoundException {
         if (mailTo != null) {
-            if (smtpServer != null && emailUser != null && mailAccessAccountEnabled) {
+            if (smtpServer != null && emailUser != null) {
                 final String emailTemplate = populateUserAccessMailFields(FileReader.getResource(USER_ACCESS_EMAIL_TEMPLATE, StandardCharsets.UTF_8),
                         new String[]{submittedBy}, locale);
                 sendTemplate(mailTo, getMessage("pdf.form.mail.subject", null, locale),
@@ -68,8 +65,8 @@ public class ServerEmailService {
                 EmailServiceLogger.info(this.getClass(), "Sending form '{}' to email '{}' by ''.", formName, mailTo, submittedBy);
             } else {
                 EmailServiceLogger.debug(this.getClass(), "Email settings not set. Emails will be ignored.");
-                EmailServiceLogger.debug(this.getClass(), "Values are smtpServer '{}', emailUser '{}', mailAccessAccountEnabled '{}'.",
-                        smtpServer, emailUser, mailAccessAccountEnabled);
+                EmailServiceLogger.debug(this.getClass(), "Values are smtpServer '{}', emailUser '{}'.",
+                        smtpServer, emailUser);
                 throw new EmailNotSentException("Email settings not set. Emails will be ignored.");
             }
         } else {

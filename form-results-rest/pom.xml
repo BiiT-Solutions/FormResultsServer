@@ -123,7 +123,7 @@
         </dependency>
     </dependencies>
     <build>
-        <finalName>formResults</finalName>
+        <finalName>form-results-server</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
