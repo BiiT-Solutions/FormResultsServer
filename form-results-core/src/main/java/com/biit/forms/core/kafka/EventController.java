@@ -3,7 +3,7 @@ package com.biit.forms.core.kafka;
 import com.biit.form.result.FormResult;
 import com.biit.forms.core.controllers.ReceivedFormController;
 import com.biit.forms.core.converters.EventConverter;
-import com.biit.forms.core.email.ServerEmailService;
+import com.biit.forms.core.email.FormServerEmailService;
 import com.biit.forms.logger.FormResultsLogger;
 import com.biit.forms.persistence.repositories.ReceivedFormRepository;
 import com.biit.kafka.events.Event;
@@ -28,16 +28,16 @@ public class EventController {
     private final EventConverter eventConverter;
     private final ReceivedFormRepository receivedFormRepository;
     private final ReceivedFormController receivedFormController;
-    private final ServerEmailService serverEmailService;
+    private final FormServerEmailService formServerEmailService;
 
 
     public EventController(@Autowired(required = false) EventConsumerListener eventListener, EventConverter eventConverter,
                            ReceivedFormRepository receivedFormRepository, ReceivedFormController receivedFormController,
-                           ServerEmailService serverEmailService) {
+                           FormServerEmailService formServerEmailService) {
         this.eventConverter = eventConverter;
         this.receivedFormRepository = receivedFormRepository;
         this.receivedFormController = receivedFormController;
-        this.serverEmailService = serverEmailService;
+        this.formServerEmailService = formServerEmailService;
 
         //Listen to a topic
         if (eventListener != null) {
@@ -80,7 +80,7 @@ public class EventController {
     private void sendFormByMail(FormResult formResult) {
         try {
             final byte[] pdfForm = receivedFormController.convertToPdf(formResult);
-            serverEmailService.sendPdfForm(formResult.getSubmittedBy(), formResult.getName(), pdfForm);
+            formServerEmailService.sendPdfForm(formResult.getSubmittedBy(), formResult.getName(), pdfForm);
         } catch (Exception e) {
             FormResultsLogger.errorMessage(this.getClass(), e);
         }

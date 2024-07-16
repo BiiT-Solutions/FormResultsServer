@@ -11,6 +11,6 @@ import java.util.Optional;
 @Transactional
 public interface ReceivedFormRepository extends ElementRepository<ReceivedForm, Long> {
 
-    Optional<ReceivedForm> findByName(String name);
+    Optional<ReceivedForm> findByFormName(String name);
 
 }

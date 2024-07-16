@@ -3,7 +3,7 @@ package com.biit.forms.rest.api;
 import com.biit.forms.core.controllers.ReceivedFormController;
 import com.biit.forms.core.converters.ReceivedFormConverter;
 import com.biit.forms.core.converters.models.ReceivedFormConverterRequest;
-import com.biit.forms.core.email.ServerEmailService;
+import com.biit.forms.core.email.FormServerEmailService;
 import com.biit.forms.core.models.ReceivedFormDTO;
 import com.biit.forms.core.providers.ReceivedFormProvider;
 import com.biit.forms.logger.FormResultsLogger;
@@ -37,11 +37,11 @@ import java.util.List;
 public class ReceivedFormServices extends ElementServices<ReceivedForm, Long, ReceivedFormDTO, ReceivedFormRepository,
         ReceivedFormProvider, ReceivedFormConverterRequest, ReceivedFormConverter, ReceivedFormController> {
 
-    private final ServerEmailService serverEmailService;
+    private final FormServerEmailService formServerEmailService;
 
-    public ReceivedFormServices(ReceivedFormController controller, ServerEmailService serverEmailService) {
+    public ReceivedFormServices(ReceivedFormController controller, FormServerEmailService formServerEmailService) {
         super(controller);
-        this.serverEmailService = serverEmailService;
+        this.formServerEmailService = formServerEmailService;
     }
 
 
@@ -111,7 +111,7 @@ public class ReceivedFormServices extends ElementServices<ReceivedForm, Long, Re
 
         try {
             final byte[] pdfContent = getController().convertToPdf(receivedForm);
-            serverEmailService.sendPdfForm(receivedForm.getCreatedBy(), receivedForm.getForm(), pdfContent);
+            formServerEmailService.sendPdfForm(receivedForm.getCreatedBy(), receivedForm.getForm(), pdfContent);
         } catch (Exception e) {
             FormResultsLogger.errorMessage(this.getClass(), e);
             throw new BadRequestException(this.getClass(), e.getMessage());

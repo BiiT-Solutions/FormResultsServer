@@ -15,7 +15,7 @@ import java.util.Collections;
 import java.util.Locale;
 
 @Service
-public class ServerEmailService {
+public class FormServerEmailService {
 
     private static final String USER_ACCESS_EMAIL_TEMPLATE = "email-templates/cauldron.html";
 
@@ -49,7 +49,7 @@ public class ServerEmailService {
 
     private final Locale locale = Locale.ENGLISH;
 
-    public ServerEmailService(MessageSource messageSource) {
+    public FormServerEmailService(MessageSource messageSource) {
         this.messageSource = messageSource;
     }
 

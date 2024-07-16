@@ -17,6 +17,6 @@ public class ReceivedFormProvider extends ElementProvider<ReceivedForm, Long, Re
     }
 
     public Optional<ReceivedForm> findByName(String name) {
-        return getRepository().findByName(name);
+        return getRepository().findByFormName(name);
     }
 }
