@@ -79,8 +79,8 @@ public class EventController {
 
     private void sendFormByMail(FormResult formResult) {
         try {
-            final byte[] pdfForm = receivedFormController.convertToPdf(formResult);
-            formServerEmailService.sendPdfForm(formResult.getSubmittedBy(), formResult.getName(), pdfForm);
+            final byte[] pdfForm = receivedFormController.convertToPdf(formResult, formResult.getSubmittedBy());
+            formServerEmailService.sendPdfForm(formResult.getSubmittedBy(), formResult.getLabel(), pdfForm);
         } catch (Exception e) {
             FormResultsLogger.errorMessage(this.getClass(), e);
         }

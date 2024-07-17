@@ -84,7 +84,7 @@ public class ReceivedFormServices extends ElementServices<ReceivedForm, Long, Re
     @Operation(summary = "Gets a pdf from a result form.", security = @SecurityRequirement(name = "bearerAuth"))
     @GetMapping(value = "{receivedFormId}/pdf", produces = MediaType.APPLICATION_JSON_VALUE)
     public byte[] getReceivedFormAsPdf(@PathVariable(name = "receivedFormId") Long receivedFormId,
-                                       HttpServletResponse response, HttpServletRequest request) {
+                                       Authentication authentication, HttpServletResponse response, HttpServletRequest request) {
 
         final ReceivedFormDTO receivedForm = getController().get(receivedFormId);
 
@@ -92,7 +92,7 @@ public class ReceivedFormServices extends ElementServices<ReceivedForm, Long, Re
             final ContentDisposition contentDisposition = ContentDisposition.builder("attachment")
                     .filename(receivedForm.getFormName() + ".pdf").build();
             response.setHeader(HttpHeaders.CONTENT_DISPOSITION, contentDisposition.toString());
-            return getController().convertToPdf(receivedForm);
+            return getController().convertToPdf(receivedForm, authentication.getName());
         } catch (Exception e) {
             FormResultsLogger.errorMessage(this.getClass(), e);
             throw new BadRequestException(this.getClass(), e.getMessage());
@@ -105,12 +105,12 @@ public class ReceivedFormServices extends ElementServices<ReceivedForm, Long, Re
     @PutMapping(value = "{receivedFormId}/pdf/mail", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.ACCEPTED)
     public void sendReceivedFormAsPdfByMail(@PathVariable(name = "receivedFormId") Long receivedFormId,
-                                            HttpServletResponse response, HttpServletRequest request) {
+                                            Authentication authentication) {
 
         final ReceivedFormDTO receivedForm = getController().get(receivedFormId);
 
         try {
-            final byte[] pdfContent = getController().convertToPdf(receivedForm);
+            final byte[] pdfContent = getController().convertToPdf(receivedForm, authentication.getName());
             formServerEmailService.sendPdfForm(receivedForm.getCreatedBy(), receivedForm.getForm(), pdfContent);
         } catch (Exception e) {
             FormResultsLogger.errorMessage(this.getClass(), e);

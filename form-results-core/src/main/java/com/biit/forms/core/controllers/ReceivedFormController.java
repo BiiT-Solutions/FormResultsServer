@@ -40,9 +40,9 @@ public class ReceivedFormController extends KafkaElementController<ReceivedForm,
                         "No MyEntity with name '" + name + "' found on the system."))));
     }
 
-    public byte[] convertToPdf(ReceivedFormDTO receivedFormDTO) throws EmptyPdfBodyException, DocumentException, InvalidElementException,
+    public byte[] convertToPdf(ReceivedFormDTO receivedFormDTO, String submittedBy) throws EmptyPdfBodyException, DocumentException, InvalidElementException,
             JsonProcessingException {
-        return convertToPdf(ObjectMapperFactory.getObjectMapper().readValue(receivedFormDTO.getForm(), FormResult.class), receivedFormDTO.getFormName());
+        return convertToPdf(ObjectMapperFactory.getObjectMapper().readValue(receivedFormDTO.getForm(), FormResult.class), submittedBy);
     }
 
     public byte[] convertToPdf(FormResult formResult) throws EmptyPdfBodyException, DocumentException, InvalidElementException {

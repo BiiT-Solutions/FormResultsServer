@@ -8,6 +8,7 @@ import com.biit.utils.file.FileReader;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
+import org.springframework.util.MimeTypeUtils;
 
 import java.io.FileNotFoundException;
 import java.nio.charset.StandardCharsets;
@@ -80,7 +81,7 @@ public class FormServerEmailService {
         if (smtpServer != null && emailUser != null) {
             SendEmail.sendEmail(smtpServer, smtpPort, emailUser, emailPassword, emailSender, Collections.singletonList(email), null,
                     mailCopy != null ? Collections.singletonList(mailCopy) : null, mailSubject,
-                    emailTemplate, plainText, pdfForm, attachmentName);
+                    emailTemplate, plainText, pdfForm, MimeTypeUtils.APPLICATION_OCTET_STREAM_VALUE, attachmentName);
         } else {
             EmailServiceLogger.warning(this.getClass(), "Email settings not set. Emails will be ignored.");
             EmailServiceLogger.debug(this.getClass(), "Values are smtpServer '{}', emailUser '{}'.",
