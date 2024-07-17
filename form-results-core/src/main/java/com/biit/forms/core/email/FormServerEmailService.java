@@ -59,11 +59,11 @@ public class FormServerEmailService {
             FileNotFoundException {
         if (mailTo != null) {
             if (smtpServer != null && emailUser != null) {
+                EmailServiceLogger.info(this.getClass(), "Sending form '{}' to email '{}' by ''.", formName, mailTo, submittedBy);
                 final String emailTemplate = populateUserAccessMailFields(FileReader.getResource(USER_ACCESS_EMAIL_TEMPLATE, StandardCharsets.UTF_8),
                         new String[]{submittedBy}, locale);
                 sendTemplate(mailTo, getMessage("pdf.form.mail.subject", null, locale),
                         emailTemplate, getMessage("pdf.form.mail.text", new String[]{submittedBy}, locale), pdfForm, formName + ".pdf");
-                EmailServiceLogger.info(this.getClass(), "Sending form '{}' to email '{}' by ''.", formName, mailTo, submittedBy);
             } else {
                 EmailServiceLogger.debug(this.getClass(), "Email settings not set. Emails will be ignored.");
                 EmailServiceLogger.debug(this.getClass(), "Values are smtpServer '{}', emailUser '{}'.",
@@ -82,6 +82,7 @@ public class FormServerEmailService {
             SendEmail.sendEmail(smtpServer, smtpPort, emailUser, emailPassword, emailSender, Collections.singletonList(email), null,
                     mailCopy != null ? Collections.singletonList(mailCopy) : null, mailSubject,
                     emailTemplate, plainText, pdfForm, MimeTypeUtils.APPLICATION_OCTET_STREAM_VALUE, attachmentName);
+            EmailServiceLogger.info(this.getClass(), "Email sent!");
         } else {
             EmailServiceLogger.warning(this.getClass(), "Email settings not set. Emails will be ignored.");
             EmailServiceLogger.debug(this.getClass(), "Values are smtpServer '{}', emailUser '{}'.",

@@ -46,6 +46,10 @@
         <appender-ref ref="DAILY"/>
         <appender-ref ref="CONSOLE"/>
     </logger>
+    <logger name="com.biit.server.logger.EmailServiceLogger" additivity="false" level="DEBUG">
+        <appender-ref ref="DAILY"/>
+        <appender-ref ref="CONSOLE"/>
+    </logger>
     <logger name="com.biit.server.logger.LoggedException" additivity="false" level="ERROR">
         <appender-ref ref="CONSOLE"/>
         <appender-ref ref="DAILY"/>
