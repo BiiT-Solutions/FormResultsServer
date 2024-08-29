@@ -24,6 +24,7 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
                 @Index(name = "ind_organization", columnList = "organization")
         })
 public class ReceivedForm extends Element<Long> {
+    public static final int MAX_JSON_LENGTH = 5242880;  //5MB
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -41,7 +42,7 @@ public class ReceivedForm extends Element<Long> {
     @Column(name = "created_by")
     private String createdBy;
 
-    @Column(name = "form_content", columnDefinition = "TEXT", nullable = false)
+    @Column(name = "form_content", length = MAX_JSON_LENGTH, nullable = false)
     @Convert(converter = StringCryptoConverter.class)
     private String form;
 
