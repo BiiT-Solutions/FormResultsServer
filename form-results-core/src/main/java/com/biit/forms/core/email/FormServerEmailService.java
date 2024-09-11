@@ -3,6 +3,8 @@ package com.biit.forms.core.email;
 import com.biit.logger.mail.SendEmail;
 import com.biit.logger.mail.exceptions.EmailNotSentException;
 import com.biit.logger.mail.exceptions.InvalidEmailAddressException;
+import com.biit.server.email.EmailSendPool;
+import com.biit.server.email.ServerEmailService;
 import com.biit.server.logger.EmailServiceLogger;
 import com.biit.utils.file.FileReader;
 import org.springframework.beans.factory.annotation.Value;
@@ -16,14 +18,9 @@ import java.util.Collections;
 import java.util.Locale;
 
 @Service
-public class FormServerEmailService {
+public class FormServerEmailService extends ServerEmailService {
 
-    private static final String USER_ACCESS_EMAIL_TEMPLATE = "email-templates/cauldron.html";
-
-    protected static final String EMAIL_TITLE_TAG = "EMAIL:TITLE";
-    protected static final String EMAIL_SUBTITLE_TAG = "EMAIL:SUBTITLE";
-    protected static final String EMAIL_BODY_TAG = "EMAIL:BODY";
-    protected static final String EMAIL_FOOTER_TAG = "EMAIL:FOOTER";
+    private static final String USER_ACCESS_EMAIL_TEMPLATE = "email-templates/parchment.html";
 
     @Value("${mail.server.smtp.server:#{null}}")
     private String smtpServer;
@@ -50,7 +47,8 @@ public class FormServerEmailService {
 
     private final Locale locale = Locale.ENGLISH;
 
-    public FormServerEmailService(MessageSource messageSource) {
+    public FormServerEmailService(EmailSendPool emailSendPool, MessageSource messageSource) {
+        super(emailSendPool, messageSource);
         this.messageSource = messageSource;
     }
 
