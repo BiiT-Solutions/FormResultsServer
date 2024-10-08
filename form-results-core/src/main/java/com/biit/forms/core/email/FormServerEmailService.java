@@ -16,6 +16,7 @@ import java.io.FileNotFoundException;
 import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.Locale;
+import java.util.Optional;
 
 @Service
 public class FormServerEmailService extends ServerEmailService {
@@ -47,7 +48,7 @@ public class FormServerEmailService extends ServerEmailService {
 
     private final Locale locale = Locale.ENGLISH;
 
-    public FormServerEmailService(EmailSendPool emailSendPool, MessageSource messageSource) {
+    public FormServerEmailService(Optional<EmailSendPool> emailSendPool, MessageSource messageSource) {
         super(emailSendPool, messageSource);
         this.messageSource = messageSource;
     }
