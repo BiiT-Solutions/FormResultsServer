@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Component
-public class EventConverter {
+public class PdfReportEventConverter {
     private static final String FORM_RESULT_EVENT_TYPE = "PdfReport";
 
     @Value("${spring.application.name:#{null}}")
