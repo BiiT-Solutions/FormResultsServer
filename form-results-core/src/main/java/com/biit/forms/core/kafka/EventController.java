@@ -16,6 +16,7 @@ import org.springframework.stereotype.Controller;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.TimeZone;
+import java.util.UUID;
 
 
 /**
@@ -29,15 +30,17 @@ public class EventController {
     private final ReceivedFormRepository receivedFormRepository;
     private final ReceivedFormController receivedFormController;
     private final FormServerEmailService formServerEmailService;
+    private final FormPdfEventSender formPdfEventSender;
 
 
     public EventController(@Autowired(required = false) EventConsumerListener eventListener, EventConverter eventConverter,
                            ReceivedFormRepository receivedFormRepository, ReceivedFormController receivedFormController,
-                           FormServerEmailService formServerEmailService) {
+                           FormServerEmailService formServerEmailService, FormPdfEventSender formPdfEventSender) {
         this.eventConverter = eventConverter;
         this.receivedFormRepository = receivedFormRepository;
         this.receivedFormController = receivedFormController;
         this.formServerEmailService = formServerEmailService;
+        this.formPdfEventSender = formPdfEventSender;
 
         //Listen to a topic
         if (eventListener != null) {
@@ -62,8 +65,11 @@ public class EventController {
             EventsLogger.debug(this.getClass(), "With content:\n '{}'.", formResult.toJson());
             receivedFormRepository.save(eventConverter.getReceivedForm(event, formResult));
             EventsLogger.debug(this.getClass(), "Form '{}' saved.", formResult.getLabel());
+            final byte[] pdfForm = receivedFormController.convertToPdf(formResult, formResult.getSubmittedBy());
             //Generate PDF and send by email
-            sendFormByMail(formResult);
+            sendFormByMail(pdfForm, formResult.getLabel(), formResult.getSubmittedBy());
+            //Generate PDF and send as event
+            sendFormByEvent(pdfForm, formResult, event.getSessionId(), event.getOrganization());
         } catch (Exception e) {
             EventsLogger.severe(this.getClass(), "Invalid event received!!\n" + event);
         }
@@ -77,12 +83,15 @@ public class EventController {
     }
 
 
-    private void sendFormByMail(FormResult formResult) {
+    private void sendFormByMail(byte[] pdfForm, String formLabel, String submittedBy) {
         try {
-            final byte[] pdfForm = receivedFormController.convertToPdf(formResult, formResult.getSubmittedBy());
-            formServerEmailService.sendPdfForm(formResult.getSubmittedBy(), formResult.getLabel(), pdfForm);
+            formServerEmailService.sendPdfForm(submittedBy, formLabel, pdfForm);
         } catch (Exception e) {
             FormResultsLogger.errorMessage(this.getClass(), e);
         }
+    }
+
+    private void sendFormByEvent(byte[] pdfForm, FormResult formResult, UUID sessionId, String organization) {
+        formPdfEventSender.sendPdfForm(pdfForm, formResult, sessionId, organization);
     }
 }
