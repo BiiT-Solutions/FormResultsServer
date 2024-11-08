@@ -4,12 +4,15 @@ import com.biit.form.result.FormResult;
 import com.biit.forms.core.kafka.converter.PdfReportEventConverter;
 import com.biit.kafka.events.KafkaEventTemplate;
 import com.biit.kafka.logger.EventsLogger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.stereotype.Component;
 
 import java.util.UUID;
 
 @Component
+@ConditionalOnExpression("${spring.kafka.enabled:false}")
 public class FormPdfEventSender {
 
     @Value("${spring.kafka.send.topic:}")
@@ -19,9 +22,14 @@ public class FormPdfEventSender {
 
     private final KafkaEventTemplate kafkaTemplate;
 
-    public FormPdfEventSender(PdfReportEventConverter pdfReportEventConverter, KafkaEventTemplate kafkaTemplate) {
-        this.pdfReportEventConverter = pdfReportEventConverter;
+    public FormPdfEventSender() {
+        this.pdfReportEventConverter = null;
+        this.kafkaTemplate = null;
+    }
 
+    public FormPdfEventSender(@Autowired(required = false) PdfReportEventConverter pdfReportEventConverter,
+                              @Autowired(required = false) KafkaEventTemplate kafkaTemplate) {
+        this.pdfReportEventConverter = pdfReportEventConverter;
         this.kafkaTemplate = kafkaTemplate;
     }
 

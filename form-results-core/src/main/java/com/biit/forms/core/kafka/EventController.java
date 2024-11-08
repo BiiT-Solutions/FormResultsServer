@@ -32,6 +32,14 @@ public class EventController {
     private final FormServerEmailService formServerEmailService;
     private final FormPdfEventSender formPdfEventSender;
 
+    private EventController() {
+        this.eventConverter = null;
+        this.receivedFormRepository = null;
+        this.receivedFormController = null;
+        this.formServerEmailService = null;
+        this.formPdfEventSender = null;
+    }
+
 
     public EventController(@Autowired(required = false) EventConsumerListener eventListener, EventConverter eventConverter,
                            ReceivedFormRepository receivedFormRepository, ReceivedFormController receivedFormController,
