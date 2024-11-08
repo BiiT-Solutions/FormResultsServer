@@ -40,8 +40,8 @@ public class EventController {
         this.formPdfEventSender = null;
     }
 
-
-    public EventController(@Autowired(required = false) EventConsumerListener eventListener, EventConverter eventConverter,
+    @Autowired(required = false)
+    public EventController(EventConsumerListener eventListener, EventConverter eventConverter,
                            ReceivedFormRepository receivedFormRepository, ReceivedFormController receivedFormController,
                            FormServerEmailService formServerEmailService, FormPdfEventSender formPdfEventSender) {
         this.eventConverter = eventConverter;

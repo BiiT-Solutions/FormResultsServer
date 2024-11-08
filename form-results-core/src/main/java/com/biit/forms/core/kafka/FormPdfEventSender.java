@@ -27,8 +27,9 @@ public class FormPdfEventSender {
         this.kafkaTemplate = null;
     }
 
-    public FormPdfEventSender(@Autowired(required = false) PdfReportEventConverter pdfReportEventConverter,
-                              @Autowired(required = false) KafkaEventTemplate kafkaTemplate) {
+    @Autowired(required = false)
+    public FormPdfEventSender(PdfReportEventConverter pdfReportEventConverter,
+                              KafkaEventTemplate kafkaTemplate) {
         this.pdfReportEventConverter = pdfReportEventConverter;
         this.kafkaTemplate = kafkaTemplate;
     }
