@@ -4,7 +4,7 @@
     <artifactId>form-results-server</artifactId>
     <name>Form Results Server</name>
     <groupId>com.biit.forms</groupId>
-    <version>1.9.54-SNAPSHOT</version>
+    <version>1.9.54</version>
     <packaging>pom</packaging>
 
     <parent>
@@ -23,7 +23,7 @@
     <scm>
         <connection>scm:git:git.biit-solutions.com:Java/FormResultsServer.git</connection>
         <developerConnection>scm:git:git.biit-solutions.com:Java/FormResultsServer.git</developerConnection>
-        <tag>Form Results Server</tag>
+        <tag>form-results-server-1.9.54</tag>
     </scm>
 
     <distributionManagement>
