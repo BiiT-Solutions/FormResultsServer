@@ -15,6 +15,7 @@ import org.springframework.util.MimeTypeUtils;
 import java.io.FileNotFoundException;
 import java.nio.charset.StandardCharsets;
 import java.util.Collections;
+import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 
@@ -44,6 +45,9 @@ public class FormServerEmailService extends ServerEmailService {
     @Value("${mail.to.address:#{null}}")
     private String mailTo;
 
+    @Value("${forms.not.sent.by.mail:}")
+    private List<String> formsIgnoredNames;
+
     private final MessageSource messageSource;
 
     private final Locale locale = Locale.ENGLISH;
@@ -56,6 +60,10 @@ public class FormServerEmailService extends ServerEmailService {
 
     public void sendPdfForm(String submittedBy, String formName, byte[] pdfForm) throws EmailNotSentException, InvalidEmailAddressException,
             FileNotFoundException {
+        if (formsIgnoredNames.contains(formName)) {
+            EmailServiceLogger.warning(this.getClass(), "Form '{}' is marked as ignorable. Email will not be sent.", formName);
+            return;
+        }
         if (mailTo != null) {
             if (smtpServer != null && emailUser != null) {
                 EmailServiceLogger.info(this.getClass(), "Sending form '{}' to email '{}' by ''.", formName, mailTo, submittedBy);
@@ -75,7 +83,7 @@ public class FormServerEmailService extends ServerEmailService {
     }
 
 
-    protected void sendTemplate(String email, String mailSubject, String emailTemplate, String plainText, byte[] pdfForm, String attachmentName)
+    private void sendTemplate(String email, String mailSubject, String emailTemplate, String plainText, byte[] pdfForm, String attachmentName)
             throws EmailNotSentException, InvalidEmailAddressException {
         if (smtpServer != null && emailUser != null) {
             SendEmail.sendEmail(smtpServer, smtpPort, emailUser, emailPassword, emailSender, Collections.singletonList(email), null,

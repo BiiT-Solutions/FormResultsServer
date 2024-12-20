@@ -15,6 +15,8 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.annotation.PropertySources;
 import org.springframework.context.event.ContextRefreshedEvent;
+import org.springframework.core.convert.ConversionService;
+import org.springframework.core.convert.support.DefaultConversionService;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.web.servlet.DispatcherServlet;
@@ -61,5 +63,11 @@ public class ServicesServer {
     @Bean
     public ApplicationListener<ContextRefreshedEvent> startupLoggingListener() {
         return event -> FormResultsLogger.info(ServicesServer.class, "### Server started ###");
+    }
+
+    //For reading properties as list of string.
+    @Bean
+    public ConversionService conversionService() {
+        return new DefaultConversionService();
     }
 }
