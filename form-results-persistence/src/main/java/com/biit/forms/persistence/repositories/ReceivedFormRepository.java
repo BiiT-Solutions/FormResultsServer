@@ -5,6 +5,7 @@ import com.biit.server.persistence.repositories.ElementRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -12,5 +13,7 @@ import java.util.Optional;
 public interface ReceivedFormRepository extends ElementRepository<ReceivedForm, Long> {
 
     Optional<ReceivedForm> findByFormName(String name);
+
+    List<ReceivedForm> findByFormNameAndFormVersionAndCreatedByAndOrganization(String name, int version, String createdBy, String organization);
 
 }

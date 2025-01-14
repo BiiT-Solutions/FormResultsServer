@@ -7,7 +7,7 @@
     <test name="Form Results Server" enabled="true" preserve-order="true">
         <groups>
             <run>
-                <include name="myEntityRepository"/>
+                <include name="ReceivedFormRepository"/>
             </run>
         </groups>
         <classes>

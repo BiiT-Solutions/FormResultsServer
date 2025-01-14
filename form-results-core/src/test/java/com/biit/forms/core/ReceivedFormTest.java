@@ -6,7 +6,7 @@ import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 
 @SpringBootTest
-@Test(groups = {"myEntityTest"})
+@Test(groups = {"receivedFormTest"})
 @Listeners(TestListener.class)
 public class ReceivedFormTest extends AbstractTestNGSpringContextTests {
 

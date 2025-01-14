@@ -18,7 +18,7 @@ public class ReceivedFormNotFoundException extends NotFoundException {
     }
 
     public ReceivedFormNotFoundException(Class<?> clazz) {
-        this(clazz, "MyEntity not found");
+        this(clazz, "Form not found");
     }
 
     public ReceivedFormNotFoundException(Class<?> clazz, Throwable e) {

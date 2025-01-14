@@ -1,9 +1,12 @@
 package com.biit.forms.rest.api;
 
+import com.biit.form.result.pdf.exceptions.EmptyPdfBodyException;
+import com.biit.form.result.pdf.exceptions.InvalidElementException;
 import com.biit.forms.core.controllers.ReceivedFormController;
 import com.biit.forms.core.converters.ReceivedFormConverter;
 import com.biit.forms.core.converters.models.ReceivedFormConverterRequest;
 import com.biit.forms.core.email.FormServerEmailService;
+import com.biit.forms.core.exceptions.ReceivedFormNotFoundException;
 import com.biit.forms.core.models.ReceivedFormDTO;
 import com.biit.forms.core.providers.ReceivedFormProvider;
 import com.biit.forms.logger.FormResultsLogger;
@@ -11,7 +14,11 @@ import com.biit.forms.persistence.entities.ReceivedForm;
 import com.biit.forms.persistence.repositories.ReceivedFormRepository;
 import com.biit.server.exceptions.BadRequestException;
 import com.biit.server.rest.ElementServices;
+import com.biit.server.security.IAuthenticatedUser;
+import com.biit.usermanager.client.providers.UserManagerClient;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -26,11 +33,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/received")
@@ -39,9 +48,13 @@ public class ReceivedFormServices extends ElementServices<ReceivedForm, Long, Re
 
     private final FormServerEmailService formServerEmailService;
 
-    public ReceivedFormServices(ReceivedFormController controller, FormServerEmailService formServerEmailService) {
+    private final UserManagerClient userManagerClient;
+
+    public ReceivedFormServices(ReceivedFormController controller, FormServerEmailService formServerEmailService,
+                                UserManagerClient userManagerClient) {
         super(controller);
         this.formServerEmailService = formServerEmailService;
+        this.userManagerClient = userManagerClient;
     }
 
 
@@ -116,5 +129,78 @@ public class ReceivedFormServices extends ElementServices<ReceivedForm, Long, Re
             FormResultsLogger.errorMessage(this.getClass(), e);
             throw new BadRequestException(this.getClass(), e.getMessage());
         }
+    }
+
+
+    @Operation(summary = "Search forms as PDF.", description = """
+            Parameters:
+            - form: the form name.
+            - version: the form version.
+            - createdBy: who has filled up the form. If no user is selected by default is the authenticated user.
+            - createdByExternalReference: who has filled up the form. Using an external reference for a 3rd party application.
+            - organization: which organization the form belongs to.
+            """,
+            security = @SecurityRequirement(name = "bearerAuth"))
+    @PreAuthorize("hasAnyAuthority(@securityService.viewerPrivilege, @securityService.editorPrivilege, @securityService.adminPrivilege)")
+    @ResponseStatus(value = HttpStatus.OK)
+    @GetMapping(value = "/find/latest", produces = MediaType.APPLICATION_PDF_VALUE)
+    public ReceivedFormDTO getLatest(
+            @Parameter(name = "form", required = false) @RequestParam(value = "form") String form,
+            @Parameter(name = "version", required = false) @RequestParam(value = "version", required = false) Integer version,
+            @Parameter(name = "createdBy", required = false) @RequestParam(value = "createdBy", required = false) String createdBy,
+            @Parameter(name = "createdByExternalReference", required = false) @RequestParam(value = "createdByExternalReference", required = false)
+            String externalReference,
+            @Parameter(name = "organization", required = false) @RequestParam(value = "organization", required = false) String organization,
+            Authentication authentication, HttpServletRequest request, HttpServletResponse response) {
+
+        if (createdBy == null && organization == null) {
+            if (externalReference == null) {
+                createdBy = authentication.getName();
+            } else {
+                final Optional<IAuthenticatedUser> user = userManagerClient.findByExternalReference(externalReference);
+                if (user.isPresent()) {
+                    createdBy = user.get().getUsername();
+                }
+            }
+        }
+        canBeDoneForDifferentUsers(createdBy, authentication);
+
+        return getController().findBy(form, version != null ? version : 1, createdBy, organization);
+    }
+
+
+    @Operation(summary = "Search forms as PDF.", description = """
+            Parameters:
+            - form: the form name.
+            - version: the form version.
+            - createdBy: who has filled up the form. If no user is selected by default is the authenticated user.
+            - createdByExternalReference: who has filled up the form. Using an external reference for a 3rd party application.
+            - organization: which organization the form belongs to.
+            """,
+            security = @SecurityRequirement(name = "bearerAuth"))
+    @PreAuthorize("hasAnyAuthority(@securityService.viewerPrivilege, @securityService.editorPrivilege, @securityService.adminPrivilege)")
+    @ResponseStatus(value = HttpStatus.OK)
+    @GetMapping(value = "/find/latest/pdf", produces = MediaType.APPLICATION_PDF_VALUE)
+    public byte[] getLatestAsPdf(
+            @Parameter(name = "form", required = false) @RequestParam(value = "form") String form,
+            @Parameter(name = "version", required = false) @RequestParam(value = "version", required = false) Integer version,
+            @Parameter(name = "createdBy", required = false) @RequestParam(value = "createdBy", required = false) String createdBy,
+            @Parameter(name = "createdByExternalReference", required = false) @RequestParam(value = "createdByExternalReference", required = false)
+            String externalReference,
+            @Parameter(name = "organization", required = false) @RequestParam(value = "organization", required = false) String organization,
+            Authentication authentication, HttpServletRequest request, HttpServletResponse response)
+            throws InvalidElementException, JsonProcessingException, EmptyPdfBodyException {
+
+        final ReceivedFormDTO receivedForm = getLatest(form, version, createdBy, externalReference, organization, authentication, request, response);
+
+        if (receivedForm == null) {
+            throw new ReceivedFormNotFoundException(this.getClass(), "No document found!");
+        }
+
+        final ContentDisposition contentDisposition = ContentDisposition.builder("attachment")
+                .filename((form != null ? form : "form") + ".pdf").build();
+        response.setHeader(HttpHeaders.CONTENT_DISPOSITION, contentDisposition.toString());
+
+        return getController().convertToPdf(receivedForm, authentication.getName());
     }
 }

@@ -2,8 +2,12 @@ package com.biit.forms.core.models;
 
 import com.biit.server.controllers.models.ElementDTO;
 
+import java.io.Serial;
+
 public class ReceivedFormDTO extends ElementDTO<Long> {
 
+    @Serial
+    private static final long serialVersionUID = -787395217825643424L;
     private Long id;
 
     private String formName;

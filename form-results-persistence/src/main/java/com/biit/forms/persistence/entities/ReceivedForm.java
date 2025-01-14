@@ -14,6 +14,8 @@ import jakarta.persistence.Table;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
+import java.io.Serial;
+
 @Entity
 @Cacheable
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
@@ -24,6 +26,10 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
                 @Index(name = "ind_organization", columnList = "organization")
         })
 public class ReceivedForm extends Element<Long> {
+
+    @Serial
+    private static final long serialVersionUID = 897780227277812827L;
+
     public static final int MAX_JSON_LENGTH = 5242880;  //5MB
 
     @Id

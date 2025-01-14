@@ -5,7 +5,7 @@ import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
 import org.testng.annotations.Test;
 
 @SpringBootTest
-@Test(groups = {"myEntityRepository"})
+@Test(groups = {"ReceivedFormRepository"})
 //@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 public class ReceivedFormRepositoryTests extends AbstractTestNGSpringContextTests {
 

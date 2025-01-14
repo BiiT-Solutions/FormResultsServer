@@ -37,7 +37,7 @@ public class ReceivedFormController extends KafkaElementController<ReceivedForm,
     public ReceivedFormDTO getByName(String name) {
         return getConverter().convert(new ReceivedFormConverterRequest(getProvider().findByName(name).orElseThrow(() ->
                 new ReceivedFormNotFoundException(this.getClass(),
-                        "No MyEntity with name '" + name + "' found on the system."))));
+                        "No Document with name '" + name + "' found on the system."))));
     }
 
     public byte[] convertToPdf(ReceivedFormDTO receivedFormDTO, String submittedBy) throws EmptyPdfBodyException, DocumentException, InvalidElementException,
@@ -53,5 +53,11 @@ public class ReceivedFormController extends KafkaElementController<ReceivedForm,
         // Convert to pdf.
         final FormAsPdf pdfDocument = new FormAsPdf(formResult, footer);
         return pdfDocument.generate();
+    }
+
+    public ReceivedFormDTO findBy(String name, int version, String createdBy, String organization) {
+        return getConverter().convert(new ReceivedFormConverterRequest(getProvider().findBy(name, version, createdBy, organization).orElseThrow(() ->
+                new ReceivedFormNotFoundException(this.getClass(),
+                        "No Document with name '" + name + "' found on the system."))));
     }
 }
