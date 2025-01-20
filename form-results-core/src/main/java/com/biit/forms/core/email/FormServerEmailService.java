@@ -14,7 +14,6 @@ import org.springframework.util.MimeTypeUtils;
 
 import java.io.FileNotFoundException;
 import java.nio.charset.StandardCharsets;
-import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
@@ -41,6 +40,9 @@ public class FormServerEmailService extends ServerEmailService {
 
     @Value("${mail.copy.address:#{null}}")
     private String mailCopy;
+
+    @Value("${mail.hidden.copy.address:#{null}}")
+    private String mailHiddenCopy;
 
     @Value("${mail.to.address:#{null}}")
     private String mailTo;
@@ -86,9 +88,8 @@ public class FormServerEmailService extends ServerEmailService {
     private void sendTemplate(String email, String mailSubject, String emailTemplate, String plainText, byte[] pdfForm, String attachmentName)
             throws EmailNotSentException, InvalidEmailAddressException {
         if (smtpServer != null && emailUser != null) {
-            SendEmail.sendEmail(smtpServer, smtpPort, emailUser, emailPassword, emailSender, Collections.singletonList(email), null,
-                    mailCopy != null ? Collections.singletonList(mailCopy) : null, mailSubject,
-                    emailTemplate, plainText, pdfForm, MimeTypeUtils.APPLICATION_OCTET_STREAM_VALUE, attachmentName);
+            SendEmail.sendEmail(smtpServer, smtpPort, emailUser, emailPassword, emailSender, email, mailCopy, mailHiddenCopy,
+                    mailSubject, emailTemplate, plainText, pdfForm, MimeTypeUtils.APPLICATION_OCTET_STREAM_VALUE, attachmentName);
             EmailServiceLogger.info(this.getClass(), "Email sent!");
         } else {
             EmailServiceLogger.warning(this.getClass(), "Email settings not set. Emails will be ignored.");
