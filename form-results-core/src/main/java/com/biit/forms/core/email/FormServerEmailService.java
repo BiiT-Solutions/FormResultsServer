@@ -73,12 +73,13 @@ public class FormServerEmailService extends ServerEmailService {
         }
 
         String mailTo = mailToForcedAddress;
-        if (mailToForcedAddress != null && !mailToForcedAddress.isBlank()) {
+        if (mailToForcedAddress == null || mailToForcedAddress.isBlank()) {
             final Optional<IAuthenticatedUser> user = userManagerClient.findByUsername(username);
             if (user.isPresent()) {
                 mailTo = user.get().getEmailAddress();
             } else {
                 EmailServiceLogger.warning(this.getClass(), "User '" + username + "' not found. Email not sent.");
+                return;
             }
         }
 
