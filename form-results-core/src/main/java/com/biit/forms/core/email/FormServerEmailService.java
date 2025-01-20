@@ -6,6 +6,8 @@ import com.biit.logger.mail.exceptions.InvalidEmailAddressException;
 import com.biit.server.email.EmailSendPool;
 import com.biit.server.email.ServerEmailService;
 import com.biit.server.logger.EmailServiceLogger;
+import com.biit.server.security.IAuthenticatedUser;
+import com.biit.usermanager.client.providers.UserManagerClient;
 import com.biit.utils.file.FileReader;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
@@ -44,8 +46,8 @@ public class FormServerEmailService extends ServerEmailService {
     @Value("${mail.hidden.copy.address:#{null}}")
     private String mailHiddenCopy;
 
-    @Value("${mail.to.address:#{null}}")
-    private String mailTo;
+    @Value("${mail.to.replace.address:#{null}}")
+    private String mailToForcedAddress;
 
     @Value("${forms.not.sent.by.mail:}")
     private List<String> formsIgnoredNames;
@@ -54,33 +56,43 @@ public class FormServerEmailService extends ServerEmailService {
 
     private final Locale locale = Locale.ENGLISH;
 
-    public FormServerEmailService(Optional<EmailSendPool> emailSendPool, MessageSource messageSource) {
+    private final UserManagerClient userManagerClient;
+
+    public FormServerEmailService(Optional<EmailSendPool> emailSendPool, MessageSource messageSource, UserManagerClient userManagerClient) {
         super(emailSendPool, messageSource);
         this.messageSource = messageSource;
+        this.userManagerClient = userManagerClient;
     }
 
 
-    public void sendPdfForm(String submittedBy, String formName, byte[] pdfForm) throws EmailNotSentException, InvalidEmailAddressException,
+    public void sendPdfForm(String username, String formName, byte[] pdfForm) throws EmailNotSentException, InvalidEmailAddressException,
             FileNotFoundException {
         if (formsIgnoredNames.contains(formName)) {
             EmailServiceLogger.warning(this.getClass(), "Form '{}' is marked as ignorable. Email will not be sent.", formName);
             return;
         }
-        if (mailTo != null) {
-            if (smtpServer != null && emailUser != null) {
-                EmailServiceLogger.info(this.getClass(), "Sending form '{}' to email '{}' by ''.", formName, mailTo, submittedBy);
-                final String emailTemplate = populateUserAccessMailFields(FileReader.getResource(USER_ACCESS_EMAIL_TEMPLATE, StandardCharsets.UTF_8),
-                        new String[]{submittedBy}, locale);
-                sendTemplate(mailTo, getMessage("pdf.form.mail.subject", null, locale),
-                        emailTemplate, getMessage("pdf.form.mail.text", new String[]{submittedBy}, locale), pdfForm, formName + ".pdf");
+
+        String mailTo = mailToForcedAddress;
+        if (mailToForcedAddress != null && !mailToForcedAddress.isBlank()) {
+            final Optional<IAuthenticatedUser> user = userManagerClient.findByUsername(username);
+            if (user.isPresent()) {
+                mailTo = user.get().getEmailAddress();
             } else {
-                EmailServiceLogger.debug(this.getClass(), "Email settings not set. Emails will be ignored.");
-                EmailServiceLogger.debug(this.getClass(), "Values are smtpServer '{}', emailUser '{}'.",
-                        smtpServer, emailUser);
-                throw new EmailNotSentException("Email settings not set. Emails will be ignored.");
+                EmailServiceLogger.warning(this.getClass(), "User '" + username + "' not found. Email not sent.");
             }
+        }
+
+        if (smtpServer != null && emailUser != null) {
+            EmailServiceLogger.info(this.getClass(), "Sending form '{}' to email '{}' by '{}'.", formName, mailTo, username);
+            final String emailTemplate = populateUserAccessMailFields(FileReader.getResource(USER_ACCESS_EMAIL_TEMPLATE, StandardCharsets.UTF_8),
+                    new String[]{username}, locale);
+            sendTemplate(mailTo, getMessage("pdf.form.mail.subject", null, locale),
+                    emailTemplate, getMessage("pdf.form.mail.text", new String[]{username}, locale), pdfForm, formName + ".pdf");
         } else {
-            EmailServiceLogger.warning(this.getClass(), "No emailTo property set. Ignoring emails.");
+            EmailServiceLogger.debug(this.getClass(), "Email settings not set. Emails will be ignored.");
+            EmailServiceLogger.debug(this.getClass(), "Values are smtpServer '{}', emailUser '{}'.",
+                    smtpServer, emailUser);
+            throw new EmailNotSentException("Email settings not set. Emails will be ignored.");
         }
     }
 
