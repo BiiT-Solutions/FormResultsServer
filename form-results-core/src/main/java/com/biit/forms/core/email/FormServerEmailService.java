@@ -25,7 +25,7 @@ public class FormServerEmailService extends ServerEmailService {
 
     private static final String USER_ACCESS_EMAIL_TEMPLATE = "email-templates/parchment.html";
 
-    @Value("${mail.server.enabled:true}")
+    @Value("#{new Boolean('${mail.server.enabled:true}')}")
     private boolean mailEnabled;
 
     @Value("${mail.server.smtp.server:#{null}}")
