@@ -25,6 +25,9 @@ public class FormServerEmailService extends ServerEmailService {
 
     private static final String USER_ACCESS_EMAIL_TEMPLATE = "email-templates/parchment.html";
 
+    @Value("${mail.server.enabled:true}")
+    private boolean mailEnabled;
+
     @Value("${mail.server.smtp.server:#{null}}")
     private String smtpServer;
 
@@ -67,6 +70,9 @@ public class FormServerEmailService extends ServerEmailService {
 
     public void sendPdfForm(String username, String formName, byte[] pdfForm) throws EmailNotSentException, InvalidEmailAddressException,
             FileNotFoundException {
+        if (!mailEnabled) {
+            return;
+        }
         if (formsIgnoredNames.contains(formName)) {
             EmailServiceLogger.warning(this.getClass(), "Form '{}' is marked as ignorable. Email will not be sent.", formName);
             return;
@@ -100,6 +106,9 @@ public class FormServerEmailService extends ServerEmailService {
 
     private void sendTemplate(String email, String mailSubject, String emailTemplate, String plainText, byte[] pdfForm, String attachmentName)
             throws EmailNotSentException, InvalidEmailAddressException {
+        if (!mailEnabled) {
+            return;
+        }
         if (smtpServer != null && emailUser != null) {
             SendEmail.sendEmail(smtpServer, smtpPort, emailUser, emailPassword, emailSender, email, mailCopy, mailHiddenCopy,
                     mailSubject, emailTemplate, plainText, pdfForm, MimeTypeUtils.APPLICATION_OCTET_STREAM_VALUE, attachmentName);
