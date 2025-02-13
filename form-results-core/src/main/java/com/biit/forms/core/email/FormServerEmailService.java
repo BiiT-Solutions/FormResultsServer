@@ -71,6 +71,7 @@ public class FormServerEmailService extends ServerEmailService {
     public void sendPdfForm(String username, String formName, byte[] pdfForm) throws EmailNotSentException, InvalidEmailAddressException,
             FileNotFoundException {
         if (!mailEnabled) {
+            EmailServiceLogger.debug(this.getClass(), "Emails are disabled!");
             return;
         }
         if (formsIgnoredNames.contains(formName)) {
