@@ -8,7 +8,7 @@
     <parent>
         <artifactId>form-results-server</artifactId>
         <groupId>com.biit.forms</groupId>
-        <version>1.9.82</version>
+        <version>1.9.83-SNAPSHOT</version>
     </parent>
 
     <properties>
