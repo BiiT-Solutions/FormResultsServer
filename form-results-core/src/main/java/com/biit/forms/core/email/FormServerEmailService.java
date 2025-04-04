@@ -96,7 +96,7 @@ public class FormServerEmailService extends ServerEmailService {
 
         if (smtpServer != null && emailUser != null) {
             EmailServiceLogger.info(this.getClass(), "Sending form '{}' to email '{}' by '{}'.", formName, mailTo, username);
-            final String emailTemplate = populateUserAccessMailFields(FileReader.getResource(USER_ACCESS_EMAIL_TEMPLATE, StandardCharsets.UTF_8),
+            final String emailTemplate = populateReportMailFields(FileReader.getResource(USER_ACCESS_EMAIL_TEMPLATE, StandardCharsets.UTF_8),
                     new String[]{username}, locale);
             sendTemplate(mailTo, getMessage("pdf.form.mail.subject", null, locale),
                     emailTemplate, getMessage("pdf.form.mail.text", new String[]{username}, locale), pdfForm, formName + ".pdf");
@@ -127,7 +127,7 @@ public class FormServerEmailService extends ServerEmailService {
     }
 
 
-    private String populateUserAccessMailFields(String html, Object[] args, Locale locale) {
+    private String populateReportMailFields(String html, Object[] args, Locale locale) {
         return html.replace(EMAIL_TITLE_TAG, getMessage("pdf.form.mail.title", null, locale))
                 .replace(EMAIL_SUBTITLE_TAG, getMessage("pdf.form.mail.subtitle", args, locale))
                 .replace(EMAIL_BODY_TAG, getMessage("pdf.form.mail.body", args, locale))
