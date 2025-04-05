@@ -19,7 +19,7 @@
             <pattern>%-5p %d{yyyy-MM-dd HH:mm:ss.SSS 'GMT'Z} %c{1} [%t] - %m%n</pattern>
         </encoder>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <maxHistory>10</maxHistory>
+            <maxHistory>30</maxHistory>
             <!-- daily rollover -->
             <fileNamePattern>/logs/form-results-server-backend/rest.%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
             <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
@@ -79,6 +79,14 @@
     <logger name="com.biit.kafka.logger.EventsLogger" additivity="false" level="DEBUG">
         <appender-ref ref="CONSOLE"/>
         <appender-ref ref="DAILY"/>
+    </logger>
+    <logger name="com.biit.server.logger.DtoControllerLogger" additivity="false" level="INFO">
+        <appender-ref ref="DAILY"/>
+        <appender-ref ref="CONSOLE"/>
+    </logger>
+    <logger name="com.biit.server.logger.DtoProviderLogger" additivity="false" level="INFO">
+        <appender-ref ref="DAILY"/>
+        <appender-ref ref="CONSOLE"/>
     </logger>
 
 
