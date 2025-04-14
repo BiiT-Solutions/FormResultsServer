@@ -20,6 +20,8 @@ import com.lowagie.text.DocumentException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
+import java.util.Locale;
+
 @Controller
 public class ReceivedFormController extends KafkaElementController<ReceivedForm, Long, ReceivedFormDTO, ReceivedFormRepository,
         ReceivedFormProvider, ReceivedFormConverterRequest, ReceivedFormConverter> {
@@ -52,6 +54,12 @@ public class ReceivedFormController extends KafkaElementController<ReceivedForm,
     public byte[] convertToPdf(FormResult formResult, String footer) throws EmptyPdfBodyException, DocumentException, InvalidElementException {
         // Convert to pdf.
         final FormAsPdf pdfDocument = new FormAsPdf(formResult, footer);
+        return pdfDocument.generate();
+    }
+
+    public byte[] convertToPdf(FormResult formResult, String footer, Locale locale) throws EmptyPdfBodyException, DocumentException, InvalidElementException {
+        // Convert to pdf.
+        final FormAsPdf pdfDocument = new FormAsPdf(formResult, footer, locale);
         return pdfDocument.generate();
     }
 

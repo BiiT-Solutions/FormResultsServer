@@ -19,11 +19,11 @@ public class PdfReportEventConverter {
     private String applicationName;
 
     public PdfFormPayload generatePayload(byte[] pdfForm, FormResult formResult) {
-        final PdfFormPayload infographicPayload = new PdfFormPayload();
-        infographicPayload.setFormName(formResult.getLabel());
-        infographicPayload.setFormVersion(formResult.getVersion());
-        infographicPayload.setPdfContent(pdfForm);
-        return infographicPayload;
+        final PdfFormPayload pdfFormPayload = new PdfFormPayload();
+        pdfFormPayload.setFormName(formResult.getLabel());
+        pdfFormPayload.setFormVersion(formResult.getVersion());
+        pdfFormPayload.setPdfContent(pdfForm);
+        return pdfFormPayload;
     }
 
     public Event getPdfEvent(byte[] pdfForm, FormResult formResult, UUID sessionId, String organization) {
