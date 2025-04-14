@@ -4,7 +4,7 @@
     <artifactId>form-results-server</artifactId>
     <name>Form Results Server</name>
     <groupId>com.biit.forms</groupId>
-    <version>1.9.105-SNAPSHOT</version>
+    <version>1.9.106-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <parent>
