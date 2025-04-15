@@ -28,7 +28,8 @@ import org.springframework.web.servlet.DispatcherServlet;
         @PropertySource("classpath:application.properties"),
         @PropertySource(value = "file:${EXTERNAL_CONFIG_FILE}", ignoreResourceNotFound = true)
 })
-@ComponentScan({"com.biit.forms", "com.biit.server", "com.biit.messagebird.client", "com.biit.kafka", "com.biit.usermanager.client"})
+@ComponentScan({"com.biit.forms", "com.biit.server", "com.biit.messagebird.client", "com.biit.kafka", "com.biit.usermanager.client",
+        "com.biit.form.result.dto"})
 @ConfigurationPropertiesScan({"com.biit.forms.rest", "com.biit.kafka.config"})
 @EntityScan({"com.biit.forms.persistence.entities", "com.biit.server"})
 public class ServicesServer {

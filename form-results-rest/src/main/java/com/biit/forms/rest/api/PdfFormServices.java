@@ -1,7 +1,8 @@
 package com.biit.forms.rest.api;
 
 
-import com.biit.form.result.FormResult;
+import com.biit.form.result.dto.FormResultDTO;
+import com.biit.form.result.dto.converter.FormResultConverter;
 import com.biit.form.result.pdf.exceptions.EmptyPdfBodyException;
 import com.biit.form.result.pdf.exceptions.InvalidElementException;
 import com.biit.forms.core.controllers.ReceivedFormController;
@@ -30,9 +31,11 @@ import org.springframework.web.bind.annotation.RestController;
 public class PdfFormServices {
 
     private final ReceivedFormController receivedFormController;
+    private final FormResultConverter formResultConverter;
 
-    public PdfFormServices(ReceivedFormController receivedFormController) {
+    public PdfFormServices(ReceivedFormController receivedFormController, FormResultConverter formResultConverter) {
         this.receivedFormController = receivedFormController;
+        this.formResultConverter = formResultConverter;
     }
 
 
@@ -45,8 +48,8 @@ public class PdfFormServices {
             consumes = MediaType.TEXT_PLAIN)
     @ResponseStatus(HttpStatus.OK)
     public byte[] executeDroolsEngine(@Parameter(description = "Form Result", required = true,
-                                              content = @Content(schema = @Schema(implementation = FormResult.class)))
-                                      @RequestBody final FormResult formResult,
+                                              content = @Content(schema = @Schema(implementation = FormResultDTO.class)))
+                                      @RequestBody final FormResultDTO formResult,
                                       HttpServletRequest request,
                                       HttpServletResponse response,
                                       Authentication authentication) throws InvalidElementException, EmptyPdfBodyException {
@@ -54,7 +57,7 @@ public class PdfFormServices {
             throw new InvalidRequestException(this.getClass(), "Invalid payload!");
         }
 
-        final byte[] pdfForm = receivedFormController.convertToPdf(formResult, authentication.getName(), request.getLocale());
+        final byte[] pdfForm = receivedFormController.convertToPdf(formResultConverter.reverse(formResult), authentication.getName(), request.getLocale());
         final ContentDisposition contentDisposition = ContentDisposition.builder("attachment")
                 .filename(formResult.getName() + ".pdf").build();
         response.setHeader(HttpHeaders.CONTENT_DISPOSITION, contentDisposition.toString());
