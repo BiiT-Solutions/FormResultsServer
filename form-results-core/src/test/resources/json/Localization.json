@@ -1,0 +1,69 @@
+{
+  "class" : "com.biit.form.result.FormResult",
+  "comparationId" : "f1140f2f-ddc7-44f4-8100-9d90170a8eb0",
+  "creationTime" : "2025-08-04T12:06:40.000Z",
+  "updateTime" : "2025-08-04T12:06:40.000Z",
+  "name" : "form",
+  "label" : "TestForm",
+  "originalReference" : "f1140f2f-ddc7-44f4-8100-9d90170a8eb0",
+  "labelTranslations" : {
+    "NL" : "Testung Form",
+    "ES" : "Formulario de Test"
+  },
+  "children" : [ {
+    "class" : "com.biit.form.result.CategoryResult",
+    "comparationId" : "4a3b0406-db49-4ab3-b8d1-cd9ad58b05f0",
+    "creationTime" : "2025-08-04T12:01:08.000Z",
+    "updateTime" : "2025-08-04T12:03:49.000Z",
+    "name" : "category",
+    "label" : "category",
+    "originalReference" : "4a3b0406-db49-4ab3-b8d1-cd9ad58b05f0",
+    "labelTranslations" : {
+      "NL" : "Categochung",
+      "ES" : "Categoria"
+    },
+    "children" : [ {
+      "class" : "com.biit.form.result.RepeatableGroupResult",
+      "comparationId" : "7d407c89-2290-4e44-8c02-e20a6a413f4a",
+      "creationTime" : "2025-08-04T12:02:38.000Z",
+      "updateTime" : "2025-08-04T12:03:49.000Z",
+      "name" : "group",
+      "label" : "group",
+      "originalReference" : "7d407c89-2290-4e44-8c02-e20a6a413f4a",
+      "labelTranslations" : {
+        "NL" : "Goupchung",
+        "ES" : "Grupo"
+      },
+      "children" : [ {
+        "class" : "com.biit.form.result.QuestionWithValueResult",
+        "comparationId" : "e1161e1c-89bf-46bc-9f79-1cc746375d6d",
+        "creationTime" : "2025-08-04T12:02:55.000Z",
+        "updateTime" : "2025-08-04T12:03:49.000Z",
+        "name" : "question",
+        "label" : "question",
+        "originalReference" : "e1161e1c-89bf-46bc-9f79-1cc746375d6d",
+        "labelTranslations" : {
+          "NL" : "QuestionChung",
+          "ES" : "Pregunta"
+        },
+        "values" : [ "answer1" ],
+        "answerLabels" : [ "Answer" ],
+        "answerLabelTranslations" : {
+          "answer1" : {
+            "NL" : "Answerchung",
+            "ES" : "Respuesta"
+          }
+        }
+      } ]
+    }, {
+      "class" : "com.biit.form.result.SystemFieldResult",
+      "creationTime" : "1970-01-01T01:00:00.000Z",
+      "updateTime" : "1970-01-01T01:00:00.000Z",
+      "name" : "localization",
+      "value" : "en,es,es,en"
+    } ]
+  } ],
+  "version" : 1,
+  "organizationId" : 18903,
+  "submittedAt" : "2025-04-16T11:45:45.831Z"
+}

@@ -26,8 +26,8 @@ import java.util.Locale;
 public class ReceivedFormController extends KafkaElementController<ReceivedForm, Long, ReceivedFormDTO, ReceivedFormRepository,
         ReceivedFormProvider, ReceivedFormConverterRequest, ReceivedFormConverter> {
 
-    @Autowired
-    protected ReceivedFormController(ReceivedFormProvider provider, ReceivedFormConverter converter, ReceivedFormEventSender eventSender) {
+    protected ReceivedFormController(ReceivedFormProvider provider, ReceivedFormConverter converter,
+                                     @Autowired(required = false) ReceivedFormEventSender eventSender) {
         super(provider, converter, eventSender);
     }
 
