@@ -18,6 +18,7 @@ import com.biit.kafka.controllers.KafkaElementController;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.lowagie.text.DocumentException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 
 import java.util.Locale;
@@ -25,6 +26,12 @@ import java.util.Locale;
 @Controller
 public class ReceivedFormController extends KafkaElementController<ReceivedForm, Long, ReceivedFormDTO, ReceivedFormRepository,
         ReceivedFormProvider, ReceivedFormConverterRequest, ReceivedFormConverter> {
+
+    @Value("${show.technical.names:true}")
+    private boolean showTechnicalNames;
+
+    @Value("${disable.translations:false}")
+    private boolean disableTranslations;
 
     protected ReceivedFormController(ReceivedFormProvider provider, ReceivedFormConverter converter,
                                      @Autowired(required = false) ReceivedFormEventSender eventSender) {
@@ -53,13 +60,13 @@ public class ReceivedFormController extends KafkaElementController<ReceivedForm,
 
     public byte[] convertToPdf(FormResult formResult, String footer) throws EmptyPdfBodyException, DocumentException, InvalidElementException {
         // Convert to pdf.
-        final FormAsPdf pdfDocument = new FormAsPdf(formResult, footer);
+        final FormAsPdf pdfDocument = new FormAsPdf(formResult, footer, showTechnicalNames, disableTranslations);
         return pdfDocument.generate();
     }
 
     public byte[] convertToPdf(FormResult formResult, String footer, Locale locale) throws EmptyPdfBodyException, DocumentException, InvalidElementException {
         // Convert to pdf.
-        final FormAsPdf pdfDocument = new FormAsPdf(formResult, footer, locale);
+        final FormAsPdf pdfDocument = new FormAsPdf(formResult, footer, locale, showTechnicalNames, disableTranslations);
         return pdfDocument.generate();
     }
 
