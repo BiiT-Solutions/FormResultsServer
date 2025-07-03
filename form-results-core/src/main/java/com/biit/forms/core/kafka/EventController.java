@@ -57,7 +57,7 @@ public class EventController {
         }
     }
 
-    public void eventHandler(Event event, String key, int partition, String topic, long timeStamp) {
+    public synchronized void eventHandler(Event event, String key, int partition, String topic, long timeStamp) {
         EventsLogger.debug(this.getClass(), "Received event '{}' on topic '{}', key '{}', partition '{}' at '{}'",
                 event, topic, key, partition, LocalDateTime.ofInstant(Instant.ofEpochMilli(timeStamp),
                         TimeZone.getDefault().toZoneId()));
