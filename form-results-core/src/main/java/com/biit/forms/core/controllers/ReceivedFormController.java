@@ -15,12 +15,15 @@ import com.biit.forms.persistence.entities.ReceivedForm;
 import com.biit.forms.persistence.repositories.ReceivedFormRepository;
 import com.biit.kafka.config.ObjectMapperFactory;
 import com.biit.kafka.controllers.KafkaElementController;
+import com.biit.server.security.IUserOrganizationProvider;
+import com.biit.server.security.model.IUserOrganization;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.lowagie.text.DocumentException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 
+import java.util.List;
 import java.util.Locale;
 
 @Controller
@@ -34,8 +37,9 @@ public class ReceivedFormController extends KafkaElementController<ReceivedForm,
     private boolean disableTranslations;
 
     protected ReceivedFormController(ReceivedFormProvider provider, ReceivedFormConverter converter,
-                                     @Autowired(required = false) ReceivedFormEventSender eventSender) {
-        super(provider, converter, eventSender);
+                                     @Autowired(required = false) ReceivedFormEventSender eventSender,
+                                     List<IUserOrganizationProvider<? extends IUserOrganization>> userOrganizationProvider) {
+        super(provider, converter, eventSender, userOrganizationProvider);
     }
 
     @Override

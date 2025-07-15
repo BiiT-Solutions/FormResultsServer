@@ -14,8 +14,8 @@ import com.biit.forms.persistence.entities.ReceivedForm;
 import com.biit.forms.persistence.repositories.ReceivedFormRepository;
 import com.biit.server.exceptions.BadRequestException;
 import com.biit.server.rest.ElementServices;
-import com.biit.server.security.IAuthenticatedUser;
 import com.biit.usermanager.client.providers.UserManagerClient;
+import com.biit.usermanager.dto.UserDTO;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -157,13 +157,13 @@ public class ReceivedFormServices extends ElementServices<ReceivedForm, Long, Re
             if (externalReference == null) {
                 createdBy = authentication.getName();
             } else {
-                final Optional<IAuthenticatedUser> user = userManagerClient.findByExternalReference(externalReference);
+                final Optional<UserDTO> user = userManagerClient.findByExternalReference(externalReference);
                 if (user.isPresent()) {
                     createdBy = user.get().getUsername();
                 }
             }
         }
-        canBeDoneForDifferentUsers(createdBy, authentication);
+        canBeDoneByDifferentUsers(createdBy, authentication);
 
         return getController().findBy(form, version != null ? version : 1, createdBy, organization);
     }

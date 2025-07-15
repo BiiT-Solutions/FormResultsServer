@@ -6,8 +6,8 @@ import com.biit.logger.mail.exceptions.InvalidEmailAddressException;
 import com.biit.server.email.EmailSendPool;
 import com.biit.server.email.ServerEmailService;
 import com.biit.server.logger.EmailServiceLogger;
-import com.biit.server.security.IAuthenticatedUser;
 import com.biit.usermanager.client.providers.UserManagerClient;
+import com.biit.usermanager.dto.UserDTO;
 import com.biit.utils.file.FileReader;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
@@ -82,7 +82,7 @@ public class FormServerEmailService extends ServerEmailService {
         String mailTo = mailToForcedAddress;
         EmailServiceLogger.debug(this.getClass(), "Preparing for sending form '{}'.", formName);
         if (mailToForcedAddress == null || mailToForcedAddress.isBlank()) {
-            final Optional<IAuthenticatedUser> user = userManagerClient.findByUsername(username);
+            final Optional<UserDTO> user = userManagerClient.findByUsername(username);
             if (user.isPresent()) {
                 EmailServiceLogger.debug(this.getClass(), "Sending email to '{}'.", mailTo);
                 mailTo = user.get().getEmailAddress();
