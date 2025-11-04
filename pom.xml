@@ -4,7 +4,7 @@
     <artifactId>form-results-server</artifactId>
     <name>Form Results Server</name>
     <groupId>com.biit-solutions.form</groupId>
-    <version>1.9.145-SNAPSHOT</version>
+    <version>1.9.145</version>
     <packaging>pom</packaging>
 
     <parent>
@@ -37,7 +37,7 @@
         <connection>scm:git:ssh://git@github.com/BiiT-Solutions/FormResultsServer.git</connection>
         <developerConnection>scm:git:ssh://git@github.com/BiiT-Solutions/FormResultsServer.git</developerConnection>
         <url>https://github.com/BiiT-Solutions/FormResultsServer.git</url>
-        <tag>Form Results Server</tag>
+        <tag>form-results-server-1.9.145</tag>
     </scm>
 
     <distributionManagement>
