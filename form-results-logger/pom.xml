@@ -7,7 +7,7 @@
 
     <parent>
         <artifactId>form-results-server</artifactId>
-        <groupId>com.biit.forms</groupId>
+        <groupId>com.biit-solutions.form</groupId>
         <version>1.9.145-SNAPSHOT</version>
     </parent>
 
@@ -17,7 +17,7 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.biit</groupId>
+            <groupId>com.biit-solutions</groupId>
             <artifactId>common-utils</artifactId>
         </dependency>
         <dependency>

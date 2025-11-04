@@ -7,7 +7,7 @@
 
     <parent>
         <artifactId>form-results-server</artifactId>
-        <groupId>com.biit.forms</groupId>
+        <groupId>com.biit-solutions.form</groupId>
         <version>1.9.145-SNAPSHOT</version>
     </parent>
 
@@ -17,28 +17,28 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.biit.forms</groupId>
+            <groupId>com.biit-solutions.form</groupId>
             <artifactId>form-results-core</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.biit</groupId>
+            <groupId>com.biit-solutions</groupId>
             <artifactId>rest-server-defaults</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.biit</groupId>
+            <groupId>com.biit-solutions</groupId>
             <artifactId>user-manager-system-rest-client</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.biit</groupId>
+            <groupId>com.biit-solutions</groupId>
             <artifactId>messagebird-client</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.biit</groupId>
+            <groupId>com.biit-solutions</groupId>
             <artifactId>rest-server-rest</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.biit</groupId>
+            <groupId>com.biit-solutions</groupId>
             <artifactId>user-manager-system-security</artifactId>
         </dependency>
         <dependency>
@@ -91,7 +91,7 @@
 
         <!--Testing-->
         <dependency>
-            <groupId>com.biit</groupId>
+            <groupId>com.biit-solutions</groupId>
             <artifactId>user-manager-system-test</artifactId>
             <scope>test</scope>
         </dependency>

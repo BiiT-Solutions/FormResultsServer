@@ -7,7 +7,7 @@
 
     <parent>
         <artifactId>form-results-server</artifactId>
-        <groupId>com.biit.forms</groupId>
+        <groupId>com.biit-solutions.form</groupId>
         <version>1.9.145-SNAPSHOT</version>
     </parent>
 
@@ -17,32 +17,32 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.biit.forms</groupId>
+            <groupId>com.biit-solutions.form</groupId>
             <artifactId>form-results-persistence</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.biit</groupId>
+            <groupId>com.biit-solutions</groupId>
             <artifactId>rest-server-definitions</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.biit</groupId>
+            <groupId>com.biit-solutions</groupId>
             <artifactId>user-manager-system-rest-client</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.biit</groupId>
+            <groupId>com.biit-solutions</groupId>
             <artifactId>rest-server-dto</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.biit</groupId>
+            <groupId>com.biit-solutions.kafka</groupId>
             <artifactId>kafka-client-dto</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.biit</groupId>
+            <groupId>com.biit-solutions</groupId>
             <artifactId>form-result-xls</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.biit</groupId>
+            <groupId>com.biit-solutions</groupId>
             <artifactId>form-result-pdf</artifactId>
         </dependency>
 
@@ -63,7 +63,7 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>com.biit</groupId>
+            <groupId>com.biit-solutions</groupId>
             <artifactId>user-manager-system-test</artifactId>
             <scope>test</scope>
         </dependency>
